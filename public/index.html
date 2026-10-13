@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneySync | Personal Finance</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-brand">☕ MoneySync</div>
+      <p class="auth-tagline">Personal Finance, Bill Reminder, and Payment Tracking</p>
+
+      <div class="auth-tabs">
+        <button type="button" id="tabLogin" class="auth-tab active">Log In</button>
+        <button type="button" id="tabSignup" class="auth-tab">Sign Up</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <input id="loginEmail" type="email" placeholder="Email" autocomplete="username" required>
+        <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" required>
+        <button class="primary" type="submit">Log In</button>
+        <p id="loginError" class="auth-error"></p>
+      </form>
+
+      <form id="signupForm" class="auth-form hidden">
+        <input id="signupName" placeholder="Full name" autocomplete="name" required>
+        <input id="signupEmail" type="email" placeholder="Email" autocomplete="username" required>
+        <input id="signupPassword" type="password" placeholder="Password (min. 8 characters)" minlength="8" autocomplete="new-password" required>
+        <input id="signupPasswordConfirm" type="password" placeholder="Confirm password" autocomplete="new-password" required>
+        <button class="primary" type="submit">Create Account</button>
+        <p id="signupError" class="auth-error"></p>
+      </form>
+
+      <p class="auth-note">Prototype only — accounts are stored in this browser, not a server.</p>
+    </div>
+  </div>
+
+  <div id="appRoot" class="hidden">
+  <aside class="sidebar">
+    <div class="brand">☕ MoneySync</div>
+    <nav>
+      <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+      <button class="nav-btn" data-page="transactions">Transactions</button>
+      <button class="nav-btn" data-page="bills">Bills</button>
+      <button class="nav-btn" data-page="budget">Budget</button>
+      <button class="nav-btn" data-page="wallet">Wallet Import</button>
+      <button class="nav-btn" data-page="reports">Reports</button>
+      <button class="nav-btn" data-page="audit">Audit Log</button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p>Personal Finance, Bill Reminder, and Payment Tracking</p>
+      </div>
+      <div class="user-area">
+        <button id="notifBtn" class="notif-btn" type="button" aria-label="Notifications">
+          <img src="assets/bell-3d.png" alt="Notifications">
+          <span id="notifBadge" class="notif-badge hidden">0</span>
+        </button>
+        <span class="user" id="userChip">♡ Andrea</span>
+        <button id="logoutBtn" class="logout-btn" type="button">Log Out</button>
+      </div>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div class="welcome">
+        <h2 id="welcomeName">Good day! ♡</h2>
+        <p>Keep your money organized and your bills on track.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span>Balance</span><strong id="balance">₱0.00</strong></div>
+        <div class="card"><span>Total Income</span><strong id="income">₱0.00</strong></div>
+        <div class="card"><span>Total Expenses</span><strong id="expenses">₱0.00</strong></div>
+        <div class="card"><span>Upcoming Bills</span><strong id="upcoming">₱0.00</strong></div>
+      </div>
+      <div class="grid-two">
+        <div class="panel">
+          <h3>Recent Transactions</h3>
+          <div id="recentTransactions"></div>
+        </div>
+        <div class="panel">
+          <h3>Notifications</h3>
+          <div id="notifications"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="transactions" class="page">
+      <div class="panel">
+        <h2>Add Transaction</h2>
+        <form id="transactionForm" class="form-grid">
+          <input id="tName" placeholder="Description" required>
+          <input id="tAmount" type="number" min="0" step="0.01" placeholder="Amount" required>
+          <select id="tType">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+          <input id="tCategory" placeholder="Category" required>
+          <select id="tMethod">
+            <option>Cash</option><option>GCash</option><option>Maya</option><option>Bank</option>
+          </select>
+          <input id="tDate" type="date" required>
+          <button class="primary" type="submit">Add Transaction</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Transaction History</h2>
+        <div id="transactionList"></div>
+      </div>
+    </section>
+
+    <section id="bills" class="page">
+      <div class="panel">
+        <h2>Add Bill</h2>
+        <form id="billForm" class="form-grid">
+          <input id="bName" placeholder="Bill name" required>
+          <input id="bAmount" type="number" min="0" step="0.01" placeholder="Amount" required>
+          <input id="bDue" type="date" required>
+          <select id="bFrequency"><option>One-time</option><option>Monthly</option><option>Weekly</option></select>
+          <button class="primary" type="submit">Add Bill</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Bill Tracker</h2>
+        <div id="billList"></div>
+      </div>
+    </section>
+
+    <section id="budget" class="page">
+      <div class="panel">
+        <h2>Monthly Budget</h2>
+        <form id="budgetForm" class="form-grid">
+          <input id="budgetAmount" type="number" min="0" step="0.01" placeholder="Set budget" required>
+          <button class="primary">Save Budget</button>
+        </form>
+        <div class="progress-wrap">
+          <div class="progress"><div id="budgetProgress"></div></div>
+          <p id="budgetText">No budget set.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="wallet" class="page">
+      <div class="panel">
+        <h2>Mobile Wallet Import</h2>
+        <p>For the prototype, upload a CSV file containing: description, amount, type, category, method, date.</p>
+        <input id="csvFile" type="file" accept=".csv">
+        <p id="importMessage" class="muted"></p>
+      </div>
+    </section>
+
+    <section id="reports" class="page">
+      <div class="panel">
+        <h2>Financial Report</h2>
+        <div id="report"></div>
+      </div>
+    </section>
+
+    <section id="audit" class="page">
+      <div class="panel">
+        <h2>Audit Log</h2>
+        <div id="auditList"></div>
+      </div>
+    </section>
+  </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
