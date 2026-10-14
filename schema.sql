@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
+  pin_hash TEXT,
   role TEXT NOT NULL DEFAULT 'user',
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
@@ -35,6 +36,16 @@ CREATE TABLE IF NOT EXISTS budgets (
   amount REAL NOT NULL DEFAULT 0
 );
 
+CREATE TABLE IF NOT EXISTS savings_goals (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  name TEXT NOT NULL,
+  target_amount REAL NOT NULL CHECK (target_amount > 0),
+  saved_amount REAL NOT NULL DEFAULT 0 CHECK (saved_amount >= 0),
+  target_date TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS audit_logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER,
@@ -44,6 +55,3 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- temporary demo user until real login is added
-INSERT OR IGNORE INTO users (id, name, email, password_hash)
-VALUES (1, 'Demo User', 'demo@moneysync.test', 'temporary');

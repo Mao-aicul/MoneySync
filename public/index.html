@@ -1,92 +1,179 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoneySync | Personal Finance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="authScreen" class="auth-screen">
-    <div class="auth-card">
-      <div class="auth-brand">☕ MoneySync</div>
+    <div class="auth-bar">MONEYSYNC</div>
+    <div class="auth-art"><span>STAY IN SYNC:</span><b>THE MONEYSYNC DASHBOARD</b></div>
+    <div class="auth-pane"><div class="auth-card">
+      <h2>Welcome to MoneySync</h2>
       <p class="auth-tagline">Personal Finance, Bill Reminder, and Payment Tracking</p>
-
       <div class="auth-tabs">
         <button type="button" id="tabLogin" class="auth-tab active">Log In</button>
         <button type="button" id="tabSignup" class="auth-tab">Sign Up</button>
       </div>
-
       <form id="loginForm" class="auth-form">
-        <input id="loginEmail" type="email" placeholder="Email" autocomplete="username" required>
-        <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" required>
+        <label for="loginEmail">Email</label><input id="loginEmail" type="email" placeholder="Your email..." autocomplete="username" required>
+        <label for="loginPassword">Password</label><input id="loginPassword" type="password" placeholder="Your password..." autocomplete="current-password" required>
         <button class="primary" type="submit">Log In</button>
         <p id="loginError" class="auth-error"></p>
       </form>
-
       <form id="signupForm" class="auth-form hidden">
-        <input id="signupName" placeholder="Full name" autocomplete="name" required>
-        <input id="signupEmail" type="email" placeholder="Email" autocomplete="username" required>
-        <input id="signupPassword" type="password" placeholder="Password (min. 8 characters)" minlength="8" autocomplete="new-password" required>
-        <input id="signupPasswordConfirm" type="password" placeholder="Confirm password" autocomplete="new-password" required>
+        <label for="signupName">Name</label><input id="signupName" type="text" placeholder="Your full name..." autocomplete="name" required>
+        <label for="signupEmail">Email</label><input id="signupEmail" type="email" placeholder="Your email..." autocomplete="username" required>
+        <label for="signupPassword">Password</label><input id="signupPassword" type="password" placeholder="Min. 8 characters..." minlength="8" autocomplete="new-password" required>
+        <label for="signupPasswordConfirm">Confirm password</label><input id="signupPasswordConfirm" type="password" placeholder="Repeat your password..." autocomplete="new-password" required>
         <button class="primary" type="submit">Create Account</button>
         <p id="signupError" class="auth-error"></p>
       </form>
+      <p class="auth-note">Your financial records stay associated with your MoneySync account.</p>
+    </div></div>
+  </div>
 
-      <p class="auth-note">Prototype only — accounts are stored in this browser, not a server.</p>
+  <!-- PIN dialogs are separate from the Sign Up form. -->
+  <div id="pinModal" class="pin-modal hidden" role="dialog" aria-modal="true" aria-labelledby="pinModalTitle">
+    <div class="pin-modal-card">
+      <div id="pinSetupPanel" class="pin-panel hidden">
+        <div class="pin-modal-icon">🔐</div>
+        <h2 id="pinModalTitle">Create Your PIN</h2>
+        <p class="pin-modal-description">Your account is ready. Create a 4-digit PIN to lock MoneySync when you return.</p>
+        <form id="pinSetupForm" class="pin-form">
+          <label for="newPin">Create 4-digit PIN</label><input id="newPin" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" placeholder="Enter 4 digits" required>
+          <label for="newPinConfirm">Confirm PIN</label><input id="newPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" placeholder="Re-enter your PIN" required>
+          <p id="pinSetupError" class="auth-error"></p>
+          <button class="primary" type="submit">Save PIN</button>
+        </form>
+      </div>
+      <div id="pinUnlockPanel" class="pin-panel hidden">
+        <div class="pin-modal-icon">🔒</div>
+        <h2 id="pinUnlockTitle">Welcome Back</h2>
+        <p class="pin-modal-description">Enter your 4-digit PIN to unlock MoneySync.</p>
+        <form id="pinUnlockForm" class="pin-form">
+          <label for="unlockPin">4-digit PIN</label><input id="unlockPin" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="current-password" placeholder="Enter your PIN" required>
+          <p id="pinUnlockError" class="auth-error"></p>
+          <button class="primary" type="submit">Unlock MoneySync</button>
+        </form>
+        <button type="button" id="forgotPinBtn" class="pin-text-button">Forgot PIN?</button>
+      </div>
+      <div id="pinResetPanel" class="pin-panel hidden">
+        <div class="pin-modal-icon">🛡️</div>
+        <h2>Reset Your PIN</h2>
+        <p class="pin-modal-description">For your security, confirm your account password before setting a new PIN.</p>
+        <form id="pinResetForm" class="pin-form">
+          <label for="resetAccountPassword">Account password</label><input id="resetAccountPassword" type="password" autocomplete="current-password" placeholder="Enter account password" required>
+          <label for="resetNewPin">New 4-digit PIN</label><input id="resetNewPin" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" placeholder="Enter new PIN" required>
+          <label for="resetNewPinConfirm">Confirm new PIN</label><input id="resetNewPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" placeholder="Re-enter new PIN" required>
+          <p id="pinResetError" class="auth-error"></p>
+          <button class="primary" type="submit">Verify and Reset PIN</button>
+        </form>
+        <button type="button" id="backToUnlockBtn" class="pin-text-button">Back to PIN</button>
+      </div>
     </div>
   </div>
 
   <div id="appRoot" class="hidden">
   <aside class="sidebar">
-    <div class="brand">☕ MoneySync</div>
+    <div class="brand"><span class="logo">M</span>MONEYSYNC</div>
     <nav>
-      <button class="nav-btn active" data-page="dashboard">Dashboard</button>
-      <button class="nav-btn" data-page="transactions">Transactions</button>
-      <button class="nav-btn" data-page="bills">Bills</button>
-      <button class="nav-btn" data-page="budget">Budget</button>
-      <button class="nav-btn" data-page="wallet">Wallet Import</button>
-      <button class="nav-btn" data-page="reports">Reports</button>
-      <button class="nav-btn" data-page="audit">Audit Log</button>
+      <button class="nav-btn active" data-page="dashboard" data-title="Dashboard"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg></span>Dashboard</button><button class="nav-btn" data-page="transactions" data-title="Transactions"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg></span>Transactions</button><button class="nav-btn" data-page="bills" data-title="Bills"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></svg></span>Bills</button><button class="nav-btn" data-page="budget" data-title="Budget"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9h9A9 9 0 1 1 12 3z"/></svg></span>Budget</button>
+      <button class="nav-btn" data-page="savings" data-title="Savings Goals"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M17 7H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg></span>Savings Goals</button>
+      <div class="nav-group">Tools</div>
+      <button class="nav-btn" data-page="wallet" data-title="Wallet Import"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2zM3 7l12-3v3M16 14h2"/></svg></span>Wallet Import</button><button class="nav-btn" data-page="reports" data-title="Reports"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span>Reports</button><button class="nav-btn" data-page="audit" data-title="Audit Log"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></span>Audit Log</button>
+      <div class="nav-group">Account</div>
+      <button class="nav-btn" data-page="settings" data-title="Settings"><span class="ico">⚙</span>Settings</button>
+      <button class="nav-btn hidden" id="adminNavBtn" data-page="admin" data-title="Admin Panel"><span class="ico">♙</span>Admin Panel</button>
     </nav>
+    <div class="help"><span class="logo"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></span>
+      <b>Have a wallet export?</b><p>Import GCash or Maya transactions from a CSV.</p>
+      <button type="button" id="helpImport">Import CSV</button></div>
   </aside>
 
   <main class="main">
-    <header class="topbar">
+    <header class="topbar" id="topbar">
       <div>
-        <h1 id="pageTitle">Dashboard</h1>
-        <p>Personal Finance, Bill Reminder, and Payment Tracking</p>
+        <div class="crumb" id="crumb">MoneySync</div>
       </div>
       <div class="user-area">
-        <button id="notifBtn" class="notif-btn" type="button" aria-label="Notifications">
+        <button id="darkModeToggle" class="logout-btn" type="button" aria-pressed="false">☾ Dark mode</button>
+
+        <!-- Notification bell and popup -->
+        <button id="notifBtn" class="notif-btn" type="button"
+                aria-label="Notifications" aria-expanded="false">
           <img src="assets/bell-3d.png" alt="Notifications">
           <span id="notifBadge" class="notif-badge hidden">0</span>
         </button>
-        <span class="user" id="userChip">♡ Andrea</span>
+
+        <div id="notificationPanel" class="notification-panel hidden">
+          <div class="notification-panel-header">
+            <h3>Notifications</h3>
+            <button id="closeNotifBtn" type="button"
+                    class="notification-close" aria-label="Close notifications">
+              &times;
+            </button>
+          </div>
+          <div id="notificationPanelList">
+            <div class="empty">No new notifications.</div>
+          </div>
+        </div>
+
+        <span class="user" id="userChip">Andrea</span>
         <button id="logoutBtn" class="logout-btn" type="button">Log Out</button>
       </div>
     </header>
 
     <section id="dashboard" class="page active">
-      <div class="welcome">
-        <h2 id="welcomeName">Good day! ♡</h2>
-        <p>Keep your money organized and your bills on track.</p>
+      <div class="dashboard-intro">
+        <div>
+          <h2>Welcome back, <strong id="welcomeNameTop">there</strong></h2>
+          <span>Keep your money organized and your bills on track.</span>
+        </div>
       </div>
       <div class="cards">
-        <div class="card"><span>Balance</span><strong id="balance">₱0.00</strong></div>
-        <div class="card"><span>Total Income</span><strong id="income">₱0.00</strong></div>
-        <div class="card"><span>Total Expenses</span><strong id="expenses">₱0.00</strong></div>
-        <div class="card"><span>Upcoming Bills</span><strong id="upcoming">₱0.00</strong></div>
+        <div class="card"><div><span>Balance</span><strong id="balance">₱0.00</strong></div><div class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2zM3 7l12-3v3M16 14h2"/></svg></div></div>
+        <div class="card"><div><span>Total Income</span><strong id="income">₱0.00</strong></div><div class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v14M6 12l6 6 6-6"/></svg></div></div>
+        <div class="card"><div><span>Total Expenses</span><strong id="expenses">₱0.00</strong></div><div class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V6M6 12l6-6 6 6"/></svg></div></div>
+        <div class="card"><div><span>Upcoming Bills</span><strong id="upcoming">₱0.00</strong></div><div class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></svg></div></div>
       </div>
+      <div class="quick-actions">
+        <button type="button" id="goAdd" class="primary">+ Add Transaction</button>
+        <button type="button" id="goAddBill" class="secondary-action">+ Add Bill</button>
+      </div>
+      <div class="hero-row budget-savings-row">
+        <div class="panel gauge-panel">
+          <h3>Monthly Budget</h3><p>Spent so far this month</p>
+          <div class="gauge">
+            <svg viewBox="0 0 200 200" aria-hidden="true"><defs><linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0075FF"/><stop offset="1" stop-color="#6FCF97"/></linearGradient></defs>
+              <circle class="track" cx="100" cy="100" r="85"/><circle class="arc" id="gaugeArc" cx="100" cy="100" r="85" stroke-dasharray="534.07" stroke-dashoffset="534.07"/></svg>
+            <div class="gauge-center"><strong id="gaugePct">0%</strong><span id="gaugeText">No budget set</span></div>
+          </div>
+        </div>
+        <div class="panel dashboard-savings-panel">
+          <div class="dashboard-savings-heading"><div><h3>Your Savings Goals</h3><p>Small steps toward something big</p></div><button type="button" class="text-action" id="viewSavingsGoals">View all →</button></div>
+          <div id="dashboardSavingsGoals"></div>
+        </div>
+      </div>
+      <section class="analytics-box" aria-labelledby="analyticsTitle">
+        <div class="analytics-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 6-7M16 7h4v4"/></svg>
+        </div>
+        <div class="analytics-copy">
+          <h3 id="analyticsTitle">Interactive Financial Analytics</h3>
+          <p>Explore your expenses by category, monthly spending, and compare your income with your expenses using clear bar charts.</p>
+        </div>
+        <button type="button" id="goAnalytics" class="analytics-action">View Reports <span aria-hidden="true">→</span></button>
+      </section>
       <div class="grid-two">
-        <div class="panel">
-          <h3>Recent Transactions</h3>
-          <div id="recentTransactions"></div>
-        </div>
-        <div class="panel">
-          <h3>Notifications</h3>
-          <div id="notifications"></div>
-        </div>
+        <div class="panel"><h3>Recent Transactions</h3><div id="recentTransactions"></div></div>
+        <div class="panel"><h3>Notifications</h3><div id="notifications"></div></div>
       </div>
     </section>
 
@@ -145,10 +232,28 @@
       </div>
     </section>
 
+    <section id="savings" class="page">
+      <div class="panel">
+        <h2>Create a Savings Goal</h2>
+        <p>Set a target, add money as you save, and track your progress.</p>
+        <form id="savingsGoalForm" class="form-grid">
+          <input id="goalName" placeholder="Goal name (e.g., New phone)" maxlength="70" required>
+          <input id="goalTarget" type="number" min="1" step="0.01" placeholder="Target amount (₱)" required>
+          <input id="goalInitial" type="number" min="0" step="0.01" placeholder="Already saved (₱, optional)" value="0">
+          <input id="goalDate" type="date" aria-label="Target date (optional)">
+          <button class="primary" type="submit">Create Goal</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Your Savings Goals</h2>
+        <div id="savingsGoalList"></div>
+      </div>
+    </section>
+
     <section id="wallet" class="page">
       <div class="panel">
         <h2>Mobile Wallet Import</h2>
-        <p>For the prototype, upload a CSV file containing: description, amount, type, category, method, date.</p>
+        <p>Upload a CSV file containing: description, amount, type, category, method, date.</p>
         <input id="csvFile" type="file" accept=".csv">
         <p id="importMessage" class="muted"></p>
       </div>
@@ -156,10 +261,31 @@
 
     <section id="reports" class="page">
       <div class="panel">
-        <h2>Financial Report</h2>
+        <h2>Financial Analytics</h2>
+        <p>Bar charts update automatically from your transactions.</p>
         <div id="report"></div>
       </div>
     </section>
+
+    <section id="settings" class="page">
+      <div class="panel"><h2>Account Settings</h2><p>Change your password or 4-digit PIN. Your email address cannot be changed here.</p>
+        <div class="settings-email"><span>Email address</span><strong id="settingsEmail">—</strong><small>Email changes are disabled.</small></div>
+        <form id="changePasswordForm" class="form-grid settings-form"><h3>Change Password</h3>
+          <input id="currentPassword" type="password" placeholder="Current password" autocomplete="current-password" required>
+          <input id="settingsNewPassword" type="password" placeholder="New password (min. 8 characters)" autocomplete="new-password" minlength="8" required>
+          <input id="settingsConfirmPassword" type="password" placeholder="Confirm new password" autocomplete="new-password" minlength="8" required>
+          <button class="primary" type="submit">Update Password</button><p id="passwordSettingsMessage" class="settings-message"></p>
+        </form>
+        <form id="changePinForm" class="form-grid settings-form"><h3>Change PIN</h3>
+          <input id="settingsCurrentPasswordForPin" type="password" placeholder="Account password" autocomplete="current-password" required>
+          <input id="settingsNewPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="New 4-digit PIN" required>
+          <input id="settingsConfirmPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Confirm new PIN" required>
+          <button class="primary" type="submit">Update PIN</button><p id="pinSettingsMessage" class="settings-message"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="admin" class="page"><div class="panel"><h2>Admin Panel</h2><p>Account overview for administrator role.</p><div id="adminContent"></div></div></section>
 
     <section id="audit" class="page">
       <div class="panel">
@@ -171,5 +297,6 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="admin.js"></script>
 </body>
 </html>
